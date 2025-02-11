@@ -15,7 +15,8 @@ public class Main {
             System.out.print(a[i] + ", ");
         }
         System.out.print(a[a.length - 1]);
-        System.out.println("]");
+        System.out.print("]");
+        System.out.println();
     }
 
 
@@ -25,12 +26,24 @@ public class Main {
             int minIndex = i;
             for(int j = i + 1; j < a.length; j++){
                 if (a[j] < a[minIndex]){
+                    // correct index
                     minIndex = j;
+
+                    // bad index
+                    //minIndex = i;
                 }
             }
+            //correct swaping
             int temp = a[i];
-            a[i] = a [minIndex];
+            a[i] = a[minIndex];
             a[minIndex] = temp;
+
+            /*
+            // Bad swpaping
+            int temp = a[i];
+            a[i] = a[i];
+            a[minIndex] = temp;
+            */
         }
         return a;
     }
@@ -42,7 +55,9 @@ public class Main {
         int mid;
 
         while(left <= right){
+            // Correct mid calc 
             mid = left + (right - left) / 2;
+
             if(a[mid] == key){ return mid;}
             else if(a[mid] < key){left = mid + 1;}
             else{right = mid -1;}

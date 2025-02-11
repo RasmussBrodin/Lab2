@@ -4,8 +4,6 @@ import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-
 public class MainTestPair {
     int ARRAY_LENGHT = 10;
     int NO_KEY = 5;
