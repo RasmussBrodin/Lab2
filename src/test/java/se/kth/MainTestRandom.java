@@ -8,29 +8,34 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MainTestRandom {
-    int ARRAY_LENGHT = 10;
-    int MIN_VALUE = -200;
-    int MAX_VALUE = 200;
-    
+    int ARRAY_LENGHT = 20;
+    int MIN_VALUE = -20;
+    int MAX_VALUE = 20;
+     
     @RepeatedTest(100)
     public void testTrueMember(){
+        int iteration = 0;
         int key = randomNumber(MIN_VALUE, MAX_VALUE);
         int pos = randomNumber(0, ARRAY_LENGHT - 1);
         int[] randomArray = randomArrayWithKeyAtPos(pos, key);
-        int result = Main.memberUnsorted(randomArray, key);
+        boolean result = Main.memberUnsorted(randomArray, key);
         
-        assertNotEquals(-1, result);
-    }
+        if(!result){
+            System.out.println("bug found at iteration: " + iteration);
+            fail();
+        }
 
-    @RepeatedTest(100)
-    public void testFalseMember(){
-        int key = randomNumber(MIN_VALUE, MAX_VALUE);
-        int[] randomArray = randomArrayWithoutKey(key);
-        int result;
+        key = randomNumber(MIN_VALUE, MAX_VALUE);
+        randomArray = randomArrayWithoutKey(key);
         result = Main.memberUnsorted(randomArray, key);
         
-        assertEquals(-1, result);
+        if(result){
+            System.out.println("bug found at iteration: " + iteration);
+            fail();
+        }
+        iteration++;
     }
+
 
     public int[] randomArrayWithKeyAtPos(int pos, int key){
         Random rnd = new Random();

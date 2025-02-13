@@ -24,7 +24,7 @@ public class Main {
     public static int[] sort(int[] a){
         for(int i = 0; i < a.length; i++){
             int minIndex = i;
-            for(int j = i + 1; j < a.length; j++){
+            for(int j = i + 1/*1*/; j < a.length; j++){
                 if (a[j] < a[minIndex]){
                     // correct index
                     minIndex = j;
@@ -65,8 +65,10 @@ public class Main {
         return -1;
     }
 
-    public static int memberUnsorted(int[] a, int key){
+    public static boolean memberUnsorted(int[] a, int key){
         int[] sorted = sort(a);
-        return memberSorted(sorted, key);
+        int result = memberSorted(sorted, key);
+        if(result != -1){return true;}
+        else{return false;}
     }
 }
