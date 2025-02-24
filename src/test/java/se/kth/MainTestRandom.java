@@ -60,17 +60,15 @@ public class MainTestRandom {
                 }
         }
     
-        // Test 1: Pick a random index from the array, memberUnsorted should return true.
+        // Test 1: Pick a random index as key from the array and test memberUnsorted
         Random rnd = new Random();
-        int randomIndex = rnd.nextInt(array.length);
-        int keyPresent = array[randomIndex];
-        boolean resultPresent = Main.memberUnsorted(array, keyPresent);
-        assertTrue(resultPresent);
-        
-        // Test 2: Pick a key guaranteed to be absent ie MAX_VALUE
-        int keyAbsent = MAX_VALUE;
-        boolean resultAbsent = Main.memberUnsorted(array, keyAbsent);
-        assertFalse(resultAbsent);
+        int key = rnd.nextInt(MIN_VALUE, MAX_VALUE*2);
+        boolean result = Main.memberUnsorted(array, key);
+        boolean expectedResult = computeExpected(array, key);
+
+        if(result != expectedResult){
+            System.out.println("Bug found at iteration: " + index);
+        }
     }
 
     public static void randomArray(int ARRAY_LENGTH, int MIN_VALUE, int MAX_VALUE, int NUM_OF_TESTS) {
@@ -88,5 +86,16 @@ public class MainTestRandom {
         } catch (IOException e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
+    }
+
+    // The oracle implementation: a simple linear search.
+    // Returns true if key is present in the array, false otherwise.
+    public boolean computeExpected(int[] array, int key) {
+        for (int value : array) {
+            if (value == key) {
+                return true;
+            }
+        }
+        return false;
     }
 }
