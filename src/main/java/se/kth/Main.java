@@ -24,7 +24,7 @@ public class Main {
     public static int[] sort(int[] a){
         for(int i = 0; i < a.length; i++){
             int minIndex = i;
-            for(int j = i + 4/*1*/; j < a.length; j++){
+            for(int j = i + 1; j < a.length; j++){
                 if (a[j] < a[minIndex]){
                     // correct index
                     minIndex = j;
@@ -37,13 +37,6 @@ public class Main {
             int temp = a[i];
             a[i] = a[minIndex];
             a[minIndex] = temp;
-
-            /*
-            // Bad swpaping
-            int temp = a[i];
-            a[i] = a[i];
-            a[minIndex] = temp;
-            */
         }
         return a;
     }
@@ -55,12 +48,12 @@ public class Main {
         int mid;
 
         while(left <= right){
-            // Correct mid calc 
             mid = left + (right - left) / 2;
-
+            
             if(a[mid] == key){ return mid;}
             else if(a[mid] < key){left = mid + 1;}
             else{right = mid -1;}
+            //else{right = left;}
         }
         return -1;
     }
