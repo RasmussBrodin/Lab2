@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MainTestPair {
     int ARRAY_LENGHT = 20;
-    int NUM_OF_TESTS = 20;
 
     /*
     Treating the array as an N + 1 seperate variables
