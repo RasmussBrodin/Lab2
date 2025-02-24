@@ -6,18 +6,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainKlaraTestPair {
     int ARRAY_LENGTH = 20;
     
     // This method represents our oracle: a simple linear search.
+    // It returns true if key is found in the array, false otherwise.
     public boolean validResult(int[] array, int key, boolean result) {
         for (int value : array) {
             if (value == key) {
-                return result; // Must be true if key is found
+                return result; // result must be true if key is found
             }
         }
-        return !result; // If key not found must be false
+        return !result; // if key is not found, result should be false
     }
     
     // Generate an array filled with a default value (0) and override the two positions with v1 and v2.
@@ -33,8 +36,11 @@ public class MainKlaraTestPair {
     @Test
     public void pairWiseTestingAllPairs() {
         // File to write test cases
-        try (FileWriter writer = new FileWriter("pairwiseAllPairsTests.txt")) {
+        try (FileWriter writer = new FileWriter("pairWise.txt")) {
             int testCaseCount = 0;
+            // Use a set to track unique test cases. The key is a combination of the array and key.
+            Set<String> uniqueTestCases = new HashSet<>();
+            
             // Loop over every distinct pair of indices in the array
             for (int i = 0; i < ARRAY_LENGTH; i++) {
                 for (int j = i + 1; j < ARRAY_LENGTH; j++) {
@@ -46,6 +52,14 @@ public class MainKlaraTestPair {
                             
                             // Now, for each test array, test for both key values: 0 and 1.
                             for (int key = 0; key <= 1; key++) {
+                                // Create a string representation for uniqueness.
+                                String testCaseRepresentation = Arrays.toString(array) + " Key:" + key;
+                                // Skip if we already processed this test case.
+                                if (uniqueTestCases.contains(testCaseRepresentation)) {
+                                    continue;
+                                }
+                                uniqueTestCases.add(testCaseRepresentation);
+                                
                                 testCaseCount++;
                                 // Call the memberUnsorted function from your Main class.
                                 // Clone the array because sorting may modify it.
@@ -70,7 +84,7 @@ public class MainKlaraTestPair {
                     }
                 }
             }
-            writer.write("Total test cases executed: " + testCaseCount + "\n");
+            writer.write("Total unique test cases executed: " + testCaseCount + "\n");
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
