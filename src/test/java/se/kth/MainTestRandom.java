@@ -22,7 +22,7 @@ public class MainTestRandom {
     static int ARRAY_LENGHT = 20;
     static int MIN_VALUE = -20;
     static int MAX_VALUE = 20;
-    final static int NUM_OF_TESTS = 10;
+    final static int NUM_OF_TESTS = 100;
 
     @BeforeAll
     public static void setUp(){
@@ -68,6 +68,7 @@ public class MainTestRandom {
 
         if(result != expectedResult){
             System.out.println("Bug found at iteration: " + index);
+            fail();
         }
     }
 

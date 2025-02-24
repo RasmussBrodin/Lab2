@@ -76,7 +76,8 @@ public class MainTestPair {
                                     writer.write("Array: " + Arrays.toString(array) + "\n");
                                     writer.write("Key: " + key + "\n");
                                     writer.flush();
-                                    fail("Bug found in test case " + testCaseCount);
+                                    System.out.println("Bug found in test case " + testCaseCount);
+                                    fail();
                                 }
                             }
                         }
