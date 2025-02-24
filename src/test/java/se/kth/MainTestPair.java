@@ -1,77 +1,104 @@
 package se.kth;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class MainTestPair {
-    int ARRAY_LENGHT = 20;
-    int NUM_OF_TESTS = 20;
-
-    /*
-    Treating the array as an N + 1 seperate variables
-    Parameters tested:
-        1. Parameter key = {0, 1} 0 is default
-        2. Parameter a[i] = {0, 1} 0 is defualt, 0 <= i < a.length
-    */
+    int ARRAY_LENGTH = 20;
     
-    @Test
-    public void pairWiseTesting(){
-        int pos = 0;
-        boolean result;
-        boolean valid;
-        int[] array = new int[ARRAY_LENGHT];
-        for(int i = 0; i < ARRAY_LENGHT; i++){
-            array = getArray(pos, 1, 0);
-            pos++;
-            result = Main.memberUnsorted(array, 1);
-            valid = validResult(array, 1, result);
-            if(!valid){
-                System.out.println("Bug found at test number: " + i);
-                System.out.println("result: " + result);
-                System.out.println("valid: " + valid);
-                System.out.println("key: " + 1);
-                Main.printArray(array);
-                fail();
+    // This method represents our oracle. Returns true if key is found in the array, false otherwise.
+    public boolean validResult(int[] array, int key, boolean result) {
+        for (int value : array) {
+            if (value == key) {
+                return result;
             }
         }
-        pos = 0;
-        for(int i = 0; i < ARRAY_LENGHT; i++){
-            array = getArray(pos, 0, 1);
-            pos++;
-            result = Main.memberUnsorted(array, 0);
-            valid = validResult(array, 0, result);
-            if(!valid){
-                System.out.println("Bug found at test number: " + (i + ARRAY_LENGHT));
-                System.out.println("result: " + result);
-                System.out.println("valid: " + valid);
-                System.out.println("key: " + 0);
-                Main.printArray(array);
-                fail();
-            }
-        }
-        Main.printArray(array);
+        return !result; 
     }
-
-    public int[] getArray(int pos, int val, int notVal){
-        int[] array = new int[ARRAY_LENGHT];
-        for(int i = 0; i < ARRAY_LENGHT; i++){
-            array[i] = notVal;
-        }
-        array[pos] = val;
+    
+    // Generate an array filled with a default value(0) and change the two positions with v1 and v2.
+    public int[] generatePairwiseArray(int pos1, int pos2, int v1, int v2) {
+        int[] array = new int[ARRAY_LENGTH];
+        array[pos1] = v1;
+        array[pos2] = v2;
         return array;
     }
+    
+    @Test
+    public void pairWiseTestingAllPairs() {
+        // File to write test cases
+        try (FileWriter writer = new FileWriter("src/test/java/se/kth/pairWise.txt")) {
+            int testCaseCount = 0;
 
-    public boolean validResult(int[] original, int key, boolean result){
-        for(int i = 0; i < ARRAY_LENGHT; i++){
-            if(original[i] == key){
-                if(result == false){
-                    return false;
-                } else{
-                    return true;
+            // Set to track unique test cases
+            Set<String> uniqueTestCases = new HashSet<>();
+            
+            // Loop over every pair of indices in the array
+            for (int i = 0; i < ARRAY_LENGTH; i++) {
+                for (int j = i + 1; j < ARRAY_LENGTH; j++) {
+                    // For each pair, consider all combinations for positions i and j using {0,1}
+                    for (int v1 = 0; v1 <= 1; v1++) {
+                        for (int v2 = 0; v2 <= 1; v2++) {
+                            // Generate the array with the two positions set to v1 and v2.
+                            int[] array = generatePairwiseArray(i, j, v1, v2);
+                            
+                            // Now, for each test array, test for both key values: 0 and 1.
+                            for (int key = 0; key <= 1; key++) {
+                                // For uniqueness.
+                                String testCaseRepresentation = Arrays.toString(array) + " Key:" + key;
+
+                                // Skip if we already processed this test case.
+                                if (uniqueTestCases.contains(testCaseRepresentation)) {
+                                    continue;
+                                }
+                                uniqueTestCases.add(testCaseRepresentation);
+                                
+                                testCaseCount++;
+
+                                // Call the memberUnsorted function
+                                boolean result = Main.memberUnsorted(array, key);
+                                boolean expected = computeExpected(array, key);
+                                
+                                // Write the test case details to the file.
+                                writer.write("Test Case " + testCaseCount + ": Array = " + Arrays.toString(array)
+                                        + ", Key = " + key + ", Expected = " + expected
+                                        + ", Result = " + result + "\n");
+                                
+                                // If there is a discrepancy, log details and fail the test.
+                                if (expected != result) {
+                                    writer.write("BUG FOUND in Test Case " + testCaseCount + "\n");
+                                    writer.write("Array: " + Arrays.toString(array) + "\n");
+                                    writer.write("Key: " + key + "\n");
+                                    writer.flush();
+                                    fail("Bug found in test case " + testCaseCount);
+                                }
+                            }
+                        }
+                    }
                 }
             }
+            writer.write("Total unique test cases executed: " + testCaseCount + "\n");
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("IOException occurred while writing test cases.");
         }
-        return true;
+    }
+    
+    // The oracle implementation: a simple linear search.
+    // Returns true if key is present in the array, false otherwise.
+    public boolean computeExpected(int[] array, int key) {
+        for (int value : array) {
+            if (value == key) {
+                return true;
+            }
+        }
+        return false;
     }
 }
